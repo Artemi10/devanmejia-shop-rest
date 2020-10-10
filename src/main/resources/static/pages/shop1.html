@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>productShop</title>
+	<meta charset="utf-8">
+    <link rel="stylesheet" href="../css/reset.css">
+	<link rel="stylesheet" href="../css/styleShop.css">
+	<link rel="stylesheet" href="../css/bootstrap-grid.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row no-gutters headerTop">
+			<div class="col-sm-12">
+				<h1>Product</h1>
+				<a href="/signUp" class="buttonSignUp" id="hrefSignUp">SignUp</a>
+			</div>
+		</div>
+		<div class="row no-gutters headerBottom">
+			<div class="col-sm-12">
+				<h2>Shop</h2>
+				<a href="/logIn" class="buttonLogIn" id="hrefLogIn">LogIn</a>
+			</div>
+		</div>
+		<script src="../js/nameHandler2.js"></script>
+		<div class="row no-gutters">
+			<div class="col-sm-12">
+				<div class="slider">
+				<div class="rightSelector" id="right">></div>
+				<div class="leftSelector" id="left"><</div>
+				<img src="../images/slider0.jpg" class="imagesSlider" id="imageSlider">
+				<script src="../js/slider.js"></script>
+            </div>
+			</div>
+		</div>
+		<div class ="row no-gutters">
+			<div class="col-sm-12">
+				<h3 class="productList">Range of our products</h3>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="row no-gutters" id="divProducts">
+				<script src="../js/showStockProducts2.js"></script>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="footer">
+				<div class="row">
+					<div class=" col-md-3 col-sm-6" >
+						<p class="logo">ProductShop</p>
+					</div>
+					<div class="col-md-3 col-sm-6" >
+						<ul class="contacts">Contact Information:</ul>
+						<li class="time">Working hours: 7a.m-1a.m</li>
+						<li class="phoneNumber">Contact us: +78182424285</li>
+						<li class="email">Email: lyah.artem10@mail.ru</li>
+					</div>
+					<div class="col-md-3 col-sm-6"></div>
+					<div class="col-md-3 col-sm-6"></div>
+				</div>
+			</div>
+		</div>
+
+ </div>
+</body>
+</html>
