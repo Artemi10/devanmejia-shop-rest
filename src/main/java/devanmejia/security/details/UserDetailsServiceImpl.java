@@ -1,4 +1,4 @@
-package devanmejia.configuration.security.details;
+package devanmejia.security.details;
 
 import devanmejia.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

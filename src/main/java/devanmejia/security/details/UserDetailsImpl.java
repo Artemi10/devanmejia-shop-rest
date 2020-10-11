@@ -1,4 +1,4 @@
-package devanmejia.configuration.security.details;
+package devanmejia.security.details;
 
 import devanmejia.models.entities.User;
 import devanmejia.models.enums.UserState;
