@@ -1,6 +1,5 @@
-package devanmejia.security.details;
+package devanmejia.configuration.security.details;
 
-import devanmejia.exceptions.NoSuchObjectInDB;
 import devanmejia.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
