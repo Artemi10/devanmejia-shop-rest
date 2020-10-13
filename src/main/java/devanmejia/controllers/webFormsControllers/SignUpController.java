@@ -29,12 +29,6 @@ public class SignUpController {
     @PostMapping("/signUp")
     public String signUpUser(User user){
         signUpService.signUpUser(user);
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user, user.getPassword());
-        Authentication auth = authenticationManager.authenticate(authenticationToken);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-
-        return "redirect:/home";
+        return "redirect:/logIn";
     }
 }
