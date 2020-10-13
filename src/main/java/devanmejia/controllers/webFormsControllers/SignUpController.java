@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class SignUpController {
     @Autowired
     private SignUpService signUpService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
 
     @GetMapping("/signUp")
     public String getSignUpPage(Authentication authentication){

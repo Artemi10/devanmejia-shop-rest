@@ -1,7 +1,6 @@
 window.addEventListener("DOMContentLoaded", showOrders);
 function showOrders(){
     $.get('/showOrders' ,function(data){
-        alert(data);
          showActiveOrders(data);
         let orderElements = document.getElementsByClassName("order");
         for(let i = 0; i<orderElements.length; i++){
