@@ -103,7 +103,7 @@ function showActiveOrders(data){
             '</div>\n' +
             '<div class ="row no-gutters">\n' +
             '\t<div class="col-sm-12">\n' +
-            '\t\t<img src="../images/shopping-cart.jpg">\n' +
+            '\t\t<img src="../images/shopping-cart.png">\n' +
             '\t</div>\n' +
             '</div>';
     }
