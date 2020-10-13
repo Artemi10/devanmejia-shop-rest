@@ -2,6 +2,19 @@ window.addEventListener("DOMContentLoaded", show);
 function show(){
     $.get('/show', function(data){
        let stockProducts = JSON.parse(JSON.stringify(data));
+       if(stockProducts.length===0){
+           let divProducts = document.getElementById("divProducts");
+           divProducts.innerHTML+='<div class ="row no-gutters">\n' +
+               '\t<div class="col-sm-12">\n' +
+               '\t\t<h3 class="productList">There is not available products </h3>\n' +
+               '\t</div>\n' +
+               '</div>\n' +
+               '<div class ="row no-gutters">\n' +
+               '\t<div class="col-sm-12">\n' +
+               '\t\t<img src="../images/shopping-cart.jpg">\n' +
+               '\t</div>\n' +
+               '</div>';
+       }
        for(let i=0; i<stockProducts.length; i++){
            let product = stockProducts[i];
            let divProducts = document.getElementById("divProducts");

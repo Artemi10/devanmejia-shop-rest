@@ -94,6 +94,19 @@ function showPlaceOrderButton(currentOrder){
 }
 function showActiveOrders(data){
     let orders = JSON.parse(JSON.stringify(data));
+    if(orders.length===0){
+        let parentDiv = document.getElementById("ordersElement");
+        parentDiv.innerHTML+='<div class ="row no-gutters">\n' +
+            '\t<div class="col-sm-12">\n' +
+            '\t\t<h3 class="productList">There is not available orders</h3>\n' +
+            '\t</div>\n' +
+            '</div>\n' +
+            '<div class ="row no-gutters">\n' +
+            '\t<div class="col-sm-12">\n' +
+            '\t\t<img src="../images/shopping-cart.jpg">\n' +
+            '\t</div>\n' +
+            '</div>';
+    }
     for(let i =0; i<orders.length; i++ ){
         let order = orders[i];
         let parentDiv = document.getElementById("ordersElement");
