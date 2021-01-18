@@ -11,14 +11,13 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Service
 public class ProductImageService {
-    @Value("${imageStoragePath}")
-    private String IMAGE_STORAGE_PATH;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) {
-        File file = new File(IMAGE_STORAGE_PATH + productURL);
+        File file = new File(getStoragePath() + productURL);
         try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
              BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
             IOUtils.copy(inputStream, fileWriter);
@@ -27,10 +26,15 @@ public class ProductImageService {
         }
     }
     public byte[] getImageFromDB(String productURL) throws IOException {
-        File file = ResourceUtils.getFile(IMAGE_STORAGE_PATH + productURL);
+        File file = ResourceUtils.getFile(getStoragePath() + productURL);
         return  Files.readAllBytes(file.toPath());
     }
     public void removeImageFromFileSystem(String productURL) throws IOException {
-        Files.delete(Paths.get(IMAGE_STORAGE_PATH+productURL));
+        Files.delete(Paths.get(getStoragePath() + productURL));
+    }
+
+    public String getStoragePath(){
+        ClassLoader classLoader = getClass().getClassLoader();
+        return Objects.requireNonNull(classLoader.getResource(".")).getFile() + "static/product-images/";
     }
 }
