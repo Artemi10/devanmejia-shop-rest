@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import devanmejia.models.enums.OrderStatus;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +15,9 @@ import java.util.List;
 @Entity
 @Data
 @Table(name="orders")
-@ToString(exclude = {"cartProduct","user"} )
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +27,7 @@ public class Order {
     @JoinColumn(name="user_login", referencedColumnName = "login")
     private User user;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<CartProduct> cartProduct;
+    private List<CartProduct> cartProducts;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private OrderStatus orderStatus;

@@ -1,13 +1,14 @@
 package devanmejia.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import devanmejia.models.enums.UserRole;
 import devanmejia.models.enums.UserState;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "users")
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @Column(name = "login")
@@ -31,12 +34,6 @@ public class User {
     @Column(name="email")
     @JsonIgnore
     private String email;
-    @Column(name = "age")
-    @JsonIgnore
-    private int age;
-    @JsonIgnore
-    @Column(name = "city")
-    private String cityName;
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders;
@@ -45,6 +42,7 @@ public class User {
     @JsonIgnore
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
+    private String refreshToken;
 
 }
 
