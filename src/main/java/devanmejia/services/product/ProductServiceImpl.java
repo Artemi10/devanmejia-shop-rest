@@ -9,6 +9,7 @@ import devanmejia.transfer.AddProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Component
@@ -28,7 +29,11 @@ public class ProductServiceImpl implements ProductService {
                 .price(addProductDTO.getProductPrice())
                 .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL))
                 .build();
-        productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
+        try {
+            productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
         productRepository.save(product);
         return product;
     }
@@ -36,10 +41,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductByProductName(String productName) {
         Optional<Product> productOptional = productRepository.findById(productName);
-        if (productOptional.isPresent())
+        if (productOptional.isPresent()){
             return productOptional.get();
-        else
+        }
+        else{
             throw new IllegalArgumentException("There is not product with name " + productName + " in database");
+        }
     }
 
     @Override

@@ -19,32 +19,31 @@ import java.util.Objects;
 
 @Service
 public class ProductImageService {
-    @Value(value="classpath:static")
-    Resource resource;
+    @Value(value="classpath:static/product-images/")
+    private Resource resource;
 
-    public void loadImageInDB(byte[] imageBytes, String productURL) {
-        File file = new File(getStoragePath() + productURL);
-        try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
-             BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
-            IOUtils.copy(inputStream, fileWriter);
-        } catch (IOException e) {
-            throw new BadCredentialsException(e.getMessage());
+    public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
+        File file = new File(resource.getFile() + productURL);
+        if (file.createNewFile()) {
+            try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
+                 BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
+                IOUtils.copy(inputStream, fileWriter);
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        } else {
+            throw new IOException("File already exists");
         }
+
     }
+
     public byte[] getImageFromDB(String productURL) throws IOException {
         InputStream is = getClass().getClassLoader().getResourceAsStream("static/product-images/" + productURL);
         return StreamUtils.copyToByteArray(is);
     }
+
     public void removeImageFromFileSystem(String productURL) throws IOException {
-        Files.delete(Paths.get(getStoragePath() + productURL));
+        Files.delete(Paths.get(resource.getFile() + productURL));
     }
 
-    public String getStoragePath(){
-        try {
-            ClassPathResource classPathResource = new ClassPathResource("static/product-images/.");
-            return classPathResource.getFile().getAbsolutePath() + "/";
-        } catch (IOException e) {
-           throw new IllegalArgumentException(e);
-        }
-    }
 }
