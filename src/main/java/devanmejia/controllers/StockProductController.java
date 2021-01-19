@@ -42,6 +42,7 @@ public class StockProductController {
             List<StockProduct> stockProducts = stockProductService.getAllStockProducts();
             return new ResponseEntity<>(AdminStockProductDTO.form(stockProducts), HttpStatus.OK);
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

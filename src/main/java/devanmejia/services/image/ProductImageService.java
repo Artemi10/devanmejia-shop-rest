@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.SocketUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +36,8 @@ public class ProductImageService {
 
     public String getStoragePath(){
         ClassLoader classLoader = getClass().getClassLoader();
+        System.out.println("ClassLoader " + classLoader);
+        System.out.println("Resources " + classLoader.getResource("."));
         return classLoader.getResource(".").getFile() + "static/product-images/";
     }
 }
