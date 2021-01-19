@@ -3,6 +3,7 @@ package devanmejia.services.image;
 import com.mysql.cj.util.Base64Decoder;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,8 @@ public class ProductImageService {
 
     public String getStoragePath(){
         try {
-            return resource.getFile().getPath() + "/product-images/";
+            ClassPathResource classPathResource = new ClassPathResource("static/product-images/.");
+            return classPathResource.getFile().getAbsolutePath() + "/";
         } catch (IOException e) {
            throw new IllegalArgumentException(e);
         }
