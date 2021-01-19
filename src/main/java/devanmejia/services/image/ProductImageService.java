@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.SocketUtils;
+import org.springframework.util.StreamUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -31,8 +32,8 @@ public class ProductImageService {
         }
     }
     public byte[] getImageFromDB(String productURL) throws IOException {
-        File file = ResourceUtils.getFile(getStoragePath() + productURL);
-        return  Files.readAllBytes(file.toPath());
+        InputStream is = getClass().getClassLoader().getResourceAsStream("static/product-images/" + productURL);
+        return StreamUtils.copyToByteArray(is);
     }
     public void removeImageFromFileSystem(String productURL) throws IOException {
         Files.delete(Paths.get(getStoragePath() + productURL));
