@@ -35,6 +35,6 @@ public class ProductImageService {
 
     public String getStoragePath(){
         ClassLoader classLoader = getClass().getClassLoader();
-        return Objects.requireNonNull(classLoader.getResource(".")).getFile() + "static/product-images/";
+        return classLoader.getResource(".").getFile() + "static/product-images/";
     }
 }
