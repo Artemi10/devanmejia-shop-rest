@@ -35,9 +35,8 @@ public class ProductImageService {
     }
 
     public String getStoragePath(){
-        ClassLoader classLoader = getClass().getClassLoader();
-        System.out.println("ClassLoader " + classLoader);
-        System.out.println("Resources " + classLoader.getResource("."));
-        return classLoader.getResource(".").getFile() + "static/product-images/";
+        String path = this.getClass().getClassLoader().getResource(".").toExternalForm();
+        System.out.println(path);
+        return path + "static/product-images/";
     }
 }
