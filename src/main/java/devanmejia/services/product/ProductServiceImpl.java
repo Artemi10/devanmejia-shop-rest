@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductImageService productImageService;
 
     @Override
-    public String createNewProduct(AddProductDTO addProductDTO) {
+    public Product createNewProduct(AddProductDTO addProductDTO) {
         String productURL = addProductDTO.getProductName()+".jpg";
         Product product = Product.builder()
                 .description(addProductDTO.getProductDescription())
@@ -31,12 +31,12 @@ public class ProductServiceImpl implements ProductService {
                 .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL))
                 .build();
         try {
-            return productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
+            productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
         } catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
-//        productRepository.save(product);
-//        return product;
+        productRepository.save(product);
+        return product;
     }
 
     @Override

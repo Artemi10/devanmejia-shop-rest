@@ -71,13 +71,9 @@ public class StockProductController {
 
     @PostMapping("/admin/stockProduct")
     public ResponseEntity<Object> addNewProduct(@RequestBody AddProductDTO addProduct) {
-        String product = productService.createNewProduct(addProduct);
-        try {
+            Product product = productService.createNewProduct(addProduct);
+            stockProductService.createNewStockProduct(product);
+            return new ResponseEntity<>("New product was added successfully", HttpStatus.OK);
 
-            //tockProductService.createNewStockProduct(product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
-        }
     }
 }
