@@ -23,7 +23,7 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
-       File newFile = new File("/target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
+       File newFile = new File("target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
         System.out.println(newFile.getAbsolutePath());
         if (newFile.createNewFile()) {
             try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(newFile));
