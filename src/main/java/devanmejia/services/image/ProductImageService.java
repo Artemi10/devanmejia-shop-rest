@@ -33,19 +33,19 @@ public class ProductImageService {
         }
         System.out.println(path.getParent());
         System.out.println(path.getParent().getParent());
-        File newFile = new File("target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
-        System.out.println(newFile.getAbsolutePath());
-        if (newFile.createNewFile()) {
-            try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(newFile));
-                 BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
-                IOUtils.copy(inputStream, fileWriter);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException(e.getMessage());
-            }
-        } else {
-            throw new IOException("File already exists");
-        }
+//        File newFile = new File("target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
+//        System.out.println(newFile.getAbsolutePath());
+//        if (newFile.createNewFile()) {
+//            try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(newFile));
+//                 BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
+//                IOUtils.copy(inputStream, fileWriter);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                throw new IllegalArgumentException(e.getMessage());
+//            }
+//        } else {
+//            throw new IOException("File already exists");
+//        }
 
     }
 
