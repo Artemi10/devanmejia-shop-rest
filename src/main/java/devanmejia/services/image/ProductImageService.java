@@ -25,8 +25,11 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
-        System.out.println(getClass().getClassLoader().getResource("static/product-images/").getPath());
+        Path path = Paths.get(getClass().getClassLoader().getResource("static/product-images/").getPath() + productURL);
+        System.out.println(path.toString());
+        Files.write(path, imageBytes);
     }
+
     public byte[] getImageFromDB(String productURL) throws IOException {
         InputStream is = getClass().getClassLoader().getResourceAsStream("static/product-images/" + productURL);
         return StreamUtils.copyToByteArray(is);
