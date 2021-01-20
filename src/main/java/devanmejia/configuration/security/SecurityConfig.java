@@ -27,10 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/*").permitAll()
+                .antMatchers("/api/auth/*", "/api/stockProducts").permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("**/admin/cartProduct", "/api/cartProduct/**", "/api/orders/**", "/api/stockProduct/**").hasAuthority("ROLE_CLIENT")
+                .antMatchers("/api/cartProduct/**", "/api/orders/**").hasAuthority("ROLE_CLIENT")
                 .antMatchers("**/admin/**", "**/admin/cartProduct", "**/admin/orders").hasAuthority("ROLE_ADMIN")
                 .and()
                 .apply(new JWTSecurityConfig(jwtProvider));
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/api/auth/*");
+        web.ignoring().antMatchers("/api/auth/*", "/api/stockProducts");
     }
 
     @Bean
