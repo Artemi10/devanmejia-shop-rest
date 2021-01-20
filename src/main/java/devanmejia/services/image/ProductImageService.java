@@ -23,7 +23,8 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
-        File newFile = new File(resource.getFile().getPath() + productURL);
+        Resource resource = new ClassPathResource("static/product-images/");
+        File newFile = resource.getFile();
         System.out.println(newFile.getAbsolutePath());
         if (newFile.createNewFile()) {
             System.out.println("Created: " + newFile.getAbsolutePath());
