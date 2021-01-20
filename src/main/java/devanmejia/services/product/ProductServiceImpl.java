@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
                 .name(addProductDTO.getProductName())
                 .productType(ProductType.valueOf(addProductDTO.getProductType().toUpperCase()))
                 .price(addProductDTO.getProductPrice())
-                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL, imageBytes))
+                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL, null))
                 .build();
         productRepository.save(product);
         return product;

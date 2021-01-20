@@ -1,20 +1,15 @@
 package devanmejia.transfer;
 
-import devanmejia.models.entities.CartProduct;
+
 import devanmejia.models.entities.StockProduct;
-import devanmejia.services.image.ProductImageService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
