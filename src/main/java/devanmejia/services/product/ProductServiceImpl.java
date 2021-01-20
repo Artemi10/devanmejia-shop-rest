@@ -8,9 +8,7 @@ import devanmejia.services.image.ProductImageService;
 import devanmejia.transfer.AddProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Optional;
 
 @Component
