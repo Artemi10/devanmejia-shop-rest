@@ -24,7 +24,7 @@ public class ProductImageService {
     @Value(value="classpath:static/product-images/")
     private Resource resource;
 
-    public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException, URISyntaxException {
+    public String loadImageInDB(byte[] imageBytes, String productURL) throws IOException, URISyntaxException {
         Path path = Paths.get(this.getClass().getResource(".").toURI());
         File newFile = new File(path.getParent().getParent().toString() + "/static/product-images/" + productURL);
         System.out.println(newFile.getAbsolutePath());
@@ -37,9 +37,9 @@ public class ProductImageService {
                 throw new IllegalArgumentException(e.getMessage() + " " +newFile.getAbsolutePath());
             }
         } else {
-            throw new IOException("File already exists " + newFile.getAbsolutePath());
+           return  newFile.getAbsolutePath();
         }
-
+        return  newFile.getAbsolutePath();
     }
 
     public byte[] getImageFromDB(String productURL) throws IOException {
