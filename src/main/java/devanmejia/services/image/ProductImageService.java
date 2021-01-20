@@ -23,8 +23,9 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
-        File file = new File(resource.getFile() + productURL);
-        if (file.createNewFile()) {
+        File newFile = new File(getClass().getResource(".") + productURL);
+        if (newFile.createNewFile()) {
+            File file = new File(getClass().getResource(productURL).getFile());
             try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
                  BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
                 IOUtils.copy(inputStream, fileWriter);
