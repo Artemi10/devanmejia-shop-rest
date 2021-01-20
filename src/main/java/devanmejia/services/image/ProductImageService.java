@@ -34,10 +34,10 @@ public class ProductImageService {
                 IOUtils.copy(inputStream, fileWriter);
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new IllegalArgumentException(e.getMessage());
+                throw new IllegalArgumentException(e.getMessage() + " " +newFile.getAbsolutePath());
             }
         } else {
-            throw new IOException("File already exists");
+            throw new IOException("File already exists " + newFile.getAbsolutePath());
         }
 
     }
