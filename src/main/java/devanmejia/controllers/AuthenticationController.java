@@ -32,7 +32,7 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/admin/logIn" )
+    @PostMapping("/logIn/userAdmin" )
     public ResponseEntity<Object> logInAdmin(@RequestBody UserLogInForm userLoginForm)  {
         try {
             User admin = userService.logInAdmin(userLoginForm);
