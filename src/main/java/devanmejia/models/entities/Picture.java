@@ -22,7 +22,7 @@ public class Picture {
     private String pictureName;
     @Column(name="picture_url")
     private String URL;
-    private byte[] pictureBytes;
+    private String pictureContent;
 
 
 }

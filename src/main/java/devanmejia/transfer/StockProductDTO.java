@@ -25,7 +25,7 @@ public class StockProductDTO {
     private String productName;
     private int productPrice;
     private String productDescription;
-    private byte[] productImage;
+    private String productImage;
     private String productType;
     private int productAmount;
 
@@ -40,7 +40,7 @@ public class StockProductDTO {
     private static StockProductDTO generateCartProductDTO(StockProduct stockProduct){
         return StockProductDTO.builder()
                 .productDescription(stockProduct.getProduct().getDescription())
-                .productImage(stockProduct.getProduct().getPicture().getPictureBytes())
+                .productImage(stockProduct.getProduct().getPicture().getPictureContent())
                 .productAmount(stockProduct.getAmount())
                 .productName(stockProduct.getProduct().getName())
                 .productPrice(stockProduct.getProduct().getPrice())
