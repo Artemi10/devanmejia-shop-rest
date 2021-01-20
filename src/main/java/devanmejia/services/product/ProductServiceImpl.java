@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 @Component
@@ -31,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         try {
             productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
         productRepository.save(product);
