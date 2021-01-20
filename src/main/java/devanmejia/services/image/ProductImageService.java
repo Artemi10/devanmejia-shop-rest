@@ -26,7 +26,10 @@ public class ProductImageService {
         File newFile = new File(getClass().getResource(".") + productURL);
         if (newFile.createNewFile()) {
             System.out.println("file created: " + newFile.getAbsolutePath());
+            System.out.println("file created: " + newFile.getCanonicalPath());
             File file = new File(getClass().getResource(productURL).getFile());
+            System.out.println("write file: " + file.getAbsolutePath());
+            System.out.println("write file: " + file.getCanonicalPath());
             try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
                  BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
                 IOUtils.copy(inputStream, fileWriter);
