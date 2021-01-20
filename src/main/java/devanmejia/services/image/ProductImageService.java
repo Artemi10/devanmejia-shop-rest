@@ -26,8 +26,14 @@ public class ProductImageService {
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
         Path path = Paths.get(getClass().getClassLoader().getResource("static/product-images/").getPath() + productURL);
-        System.out.println(path.toString());
-        Files.write(path, imageBytes);
+        File file = path.toFile();
+        if(file.createNewFile()){
+            System.out.println(file.getAbsolutePath());
+            Files.write(path, imageBytes);
+        }
+        else{
+            throw new IOException("No such file " + file.getAbsolutePath());
+        }
     }
 
     public byte[] getImageFromDB(String productURL) throws IOException {
