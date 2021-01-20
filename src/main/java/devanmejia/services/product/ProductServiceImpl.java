@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         try {
             productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
         productRepository.save(product);
