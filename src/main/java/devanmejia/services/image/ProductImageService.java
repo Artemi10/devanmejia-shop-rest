@@ -31,8 +31,8 @@ public class ProductImageService {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        System.err.println(path.getParent());
-        System.err.println(path.getParent().getParent());
+        System.out.println(path.getParent());
+        System.out.println(path.getParent().getParent());
         File newFile = new File("target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
         System.out.println(newFile.getAbsolutePath());
         if (newFile.createNewFile()) {
