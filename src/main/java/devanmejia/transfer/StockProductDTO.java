@@ -29,20 +29,18 @@ public class StockProductDTO {
     private String productType;
     private int productAmount;
 
-    public static List<StockProductDTO> form(Map<StockProduct, byte[]> stockProductMap) {
+    public static List<StockProductDTO> form(List<StockProduct> stockProducts) {
         List<StockProductDTO> stockProductsDTO = new ArrayList<>();
-        for(Map.Entry<StockProduct, byte[]> stockProductEntry: stockProductMap.entrySet()){
-            StockProduct stockProduct = stockProductEntry.getKey();
-            byte[] imageBytes = stockProductEntry.getValue();
-            stockProductsDTO.add(generateCartProductDTO(stockProduct, imageBytes));
+        for(StockProduct stockProduct: stockProducts){
+            stockProductsDTO.add(generateCartProductDTO(stockProduct));
         }
         return stockProductsDTO;
     }
 
-    private static StockProductDTO generateCartProductDTO(StockProduct stockProduct, byte[] imageBytes){
+    private static StockProductDTO generateCartProductDTO(StockProduct stockProduct){
         return StockProductDTO.builder()
                 .productDescription(stockProduct.getProduct().getDescription())
-                .productImage(imageBytes)
+                .productImage(stockProduct.getProduct().getPicture().getPictureBytes())
                 .productAmount(stockProduct.getAmount())
                 .productName(stockProduct.getProduct().getName())
                 .productPrice(stockProduct.getProduct().getPrice())

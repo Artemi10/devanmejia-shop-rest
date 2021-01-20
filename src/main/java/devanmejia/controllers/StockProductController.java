@@ -29,8 +29,7 @@ public class StockProductController {
     public ResponseEntity<Object> showStockProducts(){
         try {
             List<StockProduct> stockProducts = stockProductService.getAllStockProducts();
-            Map<StockProduct, byte[]> stockProductMap = stockProductService.loadStockProductImage(stockProducts);
-            return new ResponseEntity<>(StockProductDTO.form(stockProductMap), HttpStatus.OK);
+            return new ResponseEntity<>(StockProductDTO.form(stockProducts), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

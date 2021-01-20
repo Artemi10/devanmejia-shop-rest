@@ -4,35 +4,27 @@ import devanmejia.models.entities.Picture;
 import devanmejia.models.entities.Product;
 import devanmejia.models.enums.ProductType;
 import devanmejia.repositories.ProductRepository;
-import devanmejia.services.image.ProductImageService;
 import devanmejia.transfer.AddProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.io.IOException;
 import java.util.Optional;
 
 @Component
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private ProductImageService productImageService;
 
     @Override
     public Product createNewProduct(AddProductDTO addProductDTO) {
+        byte[] imageBytes = addProductDTO.getProductImage().split(",")[1].getBytes();
         String productURL = addProductDTO.getProductName()+".jpg";
         Product product = Product.builder()
                 .description(addProductDTO.getProductDescription())
                 .name(addProductDTO.getProductName())
                 .productType(ProductType.valueOf(addProductDTO.getProductType().toUpperCase()))
                 .price(addProductDTO.getProductPrice())
-                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL))
+                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL, imageBytes))
                 .build();
-        try {
-            productImageService.loadImageInDB(addProductDTO.getProductImage().split(",")[1].getBytes(), productURL);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
         productRepository.save(product);
         return product;
     }
