@@ -25,7 +25,7 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException, URISyntaxException {
-        Path path = Paths.get(this.getClass().getResource(".").toURI());
+        Path path = Paths.get(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
         File newFile = new File(path.getParent().getParent().toString() + "/static/product-images/" + productURL);
         System.out.println(newFile.getAbsolutePath());
         if (newFile.createNewFile()) {
