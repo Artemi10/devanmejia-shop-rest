@@ -23,14 +23,11 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
-        File newFile = new File(getClass().getResource(".") + productURL);
+        File newFile = new File(resource.getFile().getPath() + productURL);
+        System.out.println(newFile.getAbsolutePath());
         if (newFile.createNewFile()) {
-            System.out.println("file created: " + newFile.getAbsolutePath());
-            System.out.println("file created: " + newFile.getCanonicalPath());
-            File file = new File(getClass().getResource(productURL).getFile());
-            System.out.println("write file: " + file.getAbsolutePath());
-            System.out.println("write file: " + file.getCanonicalPath());
-            try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
+            System.out.println("Created: " + newFile.getAbsolutePath());
+            try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(newFile));
                  BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
                 IOUtils.copy(inputStream, fileWriter);
             } catch (IOException e) {
