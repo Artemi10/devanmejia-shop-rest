@@ -25,11 +25,13 @@ public class ProductImageService {
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
         File newFile = new File(getClass().getResource(".") + productURL);
         if (newFile.createNewFile()) {
+            System.out.println("file created: " + newFile.getAbsolutePath());
             File file = new File(getClass().getResource(productURL).getFile());
             try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(file));
                  BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(Base64Decoder.decode(imageBytes, 0, imageBytes.length)))) {
                 IOUtils.copy(inputStream, fileWriter);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new IllegalArgumentException(e.getMessage());
             }
         } else {
