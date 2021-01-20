@@ -12,8 +12,10 @@ import org.springframework.util.SocketUtils;
 import org.springframework.util.StreamUtils;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
@@ -23,7 +25,15 @@ public class ProductImageService {
     private Resource resource;
 
     public void loadImageInDB(byte[] imageBytes, String productURL) throws IOException {
-       File newFile = new File("target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
+        Path path = null;
+        try {
+            path = Paths.get(this.getClass().getResource(".").toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        System.err.println(path.getParent());
+        System.err.println(path.getParent().getParent());
+        File newFile = new File("target/devamejiaSpringBootProject-1.0-SNAPSHOT.jar/BOOT-INF/classes/static/product-images/" + productURL);
         System.out.println(newFile.getAbsolutePath());
         if (newFile.createNewFile()) {
             try (BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(newFile));
