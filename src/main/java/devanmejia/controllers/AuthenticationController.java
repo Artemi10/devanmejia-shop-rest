@@ -39,7 +39,7 @@ public class AuthenticationController {
             Tokens tokens = tokensService.generateNewUserTokens(admin);
             return new ResponseEntity<>(tokens, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Your login and password are incorrect", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Your login and password are incorrect", HttpStatus.UNAUTHORIZED);
         }
     }
 
