@@ -85,8 +85,7 @@ public class OrderServiceImpl implements OrderService{
         Optional<Order> orderCandidate = orderRepository.findById(orderId);
         if(orderCandidate.isPresent()){
             return orderCandidate.get();
-        }
-        else{
+        } else{
             throw new IllegalArgumentException("There is not order with id "+ orderId +" in database");
         }
     }

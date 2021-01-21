@@ -21,24 +21,22 @@ public class CartProductDTO {
    private String productName;
    private String productDescription;
    private int amount;
-   private byte[] productImage;
+   private String productImage;
 
 
-    public static List<CartProductDTO> form(Map<CartProduct, byte[]> cartProductMap) {
+    public static List<CartProductDTO> form(List<CartProduct> cartProducts) {
         List<CartProductDTO> cartProductsDTO = new ArrayList<>();
-        for(Map.Entry<CartProduct, byte[]> cartProductEntry: cartProductMap.entrySet()){
-            CartProduct cartProduct = cartProductEntry.getKey();
-            byte[] imageBytes = cartProductEntry.getValue();
-            cartProductsDTO.add(generateCartProductDTO(cartProduct, imageBytes));
+        for(CartProduct cartProduct: cartProducts){
+            cartProductsDTO.add(generateCartProductDTO(cartProduct));
         }
         return cartProductsDTO;
     }
 
-    private static CartProductDTO generateCartProductDTO(CartProduct cartProduct, byte[] imageBytes){
+    private static CartProductDTO generateCartProductDTO(CartProduct cartProduct){
         return CartProductDTO.builder()
                 .amount(cartProduct.getAmount())
                 .productDescription(cartProduct.getProduct().getDescription())
-                .productImage(imageBytes)
+                .productImage(cartProduct.getProduct().getPicture().getPictureContent())
                 .productName(cartProduct.getProduct().getName())
                 .build();
     }
