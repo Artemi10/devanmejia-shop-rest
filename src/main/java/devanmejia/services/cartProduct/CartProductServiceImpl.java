@@ -6,16 +6,13 @@ import devanmejia.models.entities.Order;
 import devanmejia.models.entities.Product;
 import devanmejia.transfer.CartProductForm;
 import devanmejia.repositories.CartProductRepository;
-import devanmejia.services.image.ProductImageService;
 import devanmejia.services.order.OrderService;
 import devanmejia.services.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Component
 public class CartProductServiceImpl implements CartProductService {
@@ -23,8 +20,6 @@ public class CartProductServiceImpl implements CartProductService {
     private ProductService productService;
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private ProductImageService productImageService;
     @Autowired
     private CartProductRepository cartProductRepository;
 
@@ -57,17 +52,5 @@ public class CartProductServiceImpl implements CartProductService {
     }
 
 
-    @Override
-    public Map<CartProduct, byte[]> loadCartProductImage(List<CartProduct> cartProducts){
-        Map<CartProduct, byte[]> result = new HashMap<>();
-        cartProducts.forEach(cartProduct -> {
-            try {
-                result.put(cartProduct, productImageService.getImageFromDB(cartProduct.getProduct().getPicture().getURL()));
-            } catch (IOException e) {
-                throw new IllegalArgumentException(e.getMessage());
-            }
-        });
-        return result;
-    }
 
 }

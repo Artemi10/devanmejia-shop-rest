@@ -14,6 +14,5 @@ public interface CartProductService {
     CartProduct generateNewCartProduct(int amount, Product product, Order order);
     void addProductInCart(CartProductForm cartProductForm, String login);
     void saveCartProductInDB(CartProduct cartProduct);
-    Map<CartProduct, byte[]> loadCartProductImage(List<CartProduct> cartProducts);
     CartProduct getCartProductFromCartProducts(List<CartProduct> cartProducts, String productName);
 }

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 
 @RequestMapping("/api/**")
@@ -70,9 +70,12 @@ public class StockProductController {
 
     @PostMapping("/admin/stockProduct")
     public ResponseEntity<Object> addNewProduct(@RequestBody AddProductDTO addProduct) {
+        try {
             Product product = productService.createNewProduct(addProduct);
             stockProductService.createNewStockProduct(product);
             return new ResponseEntity<>("New product was added successfully", HttpStatus.OK);
-
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -16,14 +16,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createNewProduct(AddProductDTO addProductDTO) {
-        byte[] imageBytes = addProductDTO.getProductImage().split(",")[1].getBytes();
+        String imageString = addProductDTO.getProductImage().split(",")[1];
         String productURL = addProductDTO.getProductName()+".jpg";
         Product product = Product.builder()
                 .description(addProductDTO.getProductDescription())
                 .name(addProductDTO.getProductName())
                 .productType(ProductType.valueOf(addProductDTO.getProductType().toUpperCase()))
                 .price(addProductDTO.getProductPrice())
-                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL, null))
+                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL, imageString))
                 .build();
         productRepository.save(product);
         return product;
