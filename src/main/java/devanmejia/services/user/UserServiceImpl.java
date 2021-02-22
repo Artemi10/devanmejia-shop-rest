@@ -3,9 +3,11 @@ package devanmejia.services.user;
 import devanmejia.models.entities.User;
 import devanmejia.models.enums.UserRole;
 import devanmejia.models.enums.UserState;
+import devanmejia.transfer.UserCodeDTO;
 import devanmejia.transfer.UserLogInForm;
 import devanmejia.transfer.UserSignUpForm;
 import devanmejia.repositories.UserRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
     private User generateNewActiveUser(UserSignUpForm userForm){
         return new User(userForm.getLogin(), userForm.getFirstName(), userForm.getLastName(),
                 passwordEncoder.encode(userForm.getPassword()), userForm.getEmail(),
-                new ArrayList<>(), UserState.ACTIVE, UserRole.ROLE_CLIENT, null);
+                new ArrayList<>(), UserState.ACTIVE, UserRole.ROLE_CLIENT, null, null);
     }
 
     @Override
@@ -68,6 +70,29 @@ public class UserServiceImpl implements UserService {
         }
         else {
             throw new IllegalArgumentException("User with name " + login + " was not found");
+        }
+    }
+    @Override
+    public String generateNewLogInCode(User user){
+        String code = RandomStringUtils.randomAlphanumeric(6);
+        user.setCode(passwordEncoder.encode(code));
+        user.setUserRole(UserRole.ROLE_UNAUTHUSER);
+        userRepository.save(user);
+        return code;
+    }
+
+    @Override
+    public User checkUserCode(UserCodeDTO userCodeDTO) {
+        Optional<User> userCandidate = userRepository.findById(userCodeDTO.getLogin());
+        User user = userCandidate
+                .orElseThrow(() -> new IllegalArgumentException("Login is incorrect"));
+        if (passwordEncoder.matches(userCodeDTO.getCode(), user.getCode())){
+            user.setUserRole(UserRole.ROLE_CLIENT);
+            userRepository.save(user);
+            return user;
+        }
+        else{
+            throw new IllegalArgumentException("Code is incorrect");
         }
     }
 }

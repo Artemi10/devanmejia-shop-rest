@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/cartProduct/**", "/api/orders/**").hasAuthority("ROLE_CLIENT")
                 .antMatchers("**/admin/**", "**/admin/cartProduct", "**/admin/orders").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/api/verify/**").hasAuthority("ROLE_UNAUTHUSER")
                 .and()
                 .apply(new JWTSecurityConfig(jwtProvider));
         http.cors();

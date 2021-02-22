@@ -26,7 +26,7 @@ public class OrdersController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private EmailMessageSender emailMessageSender;
+    private EmailMessageSender<Order> orderEmailMessageSender;
     @Autowired
     private JWTProvider jwtProvider;
 
@@ -56,9 +56,9 @@ public class OrdersController {
     @PatchMapping("/orders/products")
     public ResponseEntity<String> updateOrderByCartProducts(@RequestBody OrderCartProductsDTO orderCartProductsDTO, HttpServletRequest request) {
         try {
-            orderService.updateOrderByCartProducts(orderCartProductsDTO.getOrderId(), orderCartProductsDTO.getCartProducts());
+            Order order = orderService.updateOrderByCartProducts(orderCartProductsDTO.getOrderId(), orderCartProductsDTO.getCartProducts());
             orderService.findActiveOrder(jwtProvider.getUserName(request));
-            emailMessageSender.sendMessage(orderCartProductsDTO.getOrderId(), EmailMessage.SuccessfulMessage);
+            orderEmailMessageSender.sendMessage(order);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch(MessagingException | IOException ex){
@@ -70,8 +70,8 @@ public class OrdersController {
     @PatchMapping("/admin/orders/{id}/status")
     public ResponseEntity<Object> updateOrderByOrderStatus(@PathVariable int id, @RequestBody String status){
         try {
-            orderService.updateOrderByOrderStatus(id, OrderStatus.valueOf(status.toUpperCase()));
-            emailMessageSender.sendMessage(id, EmailMessage.ReadyMessage);
+            Order order = orderService.updateOrderByOrderStatus(id, OrderStatus.valueOf(status.toUpperCase()));
+            orderEmailMessageSender.sendMessage(order);
         } catch(Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,7 +1,6 @@
 package devanmejia.models.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 
 import javax.persistence.*;

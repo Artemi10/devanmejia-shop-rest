@@ -13,8 +13,8 @@ public interface OrderService {
     List<Order> findOrdersByUserName(String login);
     List<Order> findOrdersByStatus(OrderStatus orderStatus);
     Order findActiveOrder(String login);
-    void updateOrderByCartProducts(int orderId, CartProductDTO[] cartProductsDTO);
-    void updateOrderByOrderStatus(int orderId, OrderStatus orderStatus);
+    Order updateOrderByCartProducts(int orderId, CartProductDTO[] cartProductsDTO);
+    Order updateOrderByOrderStatus(int orderId, OrderStatus orderStatus);
     Order getOrderById(int orderId);
     void setProductInOrder(Product product, int amount, Order order);
 

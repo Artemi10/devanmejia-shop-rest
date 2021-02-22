@@ -1,6 +1,7 @@
 package devanmejia.services.user;
 
 import devanmejia.models.entities.User;
+import devanmejia.transfer.UserCodeDTO;
 import devanmejia.transfer.UserLogInForm;
 import devanmejia.transfer.UserSignUpForm;
 import org.springframework.stereotype.Service;
@@ -11,4 +12,6 @@ public interface UserService {
     User logInUser(UserLogInForm userLoginForm);
     User logInAdmin(UserLogInForm userLoginForm);
     User getUserByLogin(String login);
+    String generateNewLogInCode(User user);
+    User checkUserCode(UserCodeDTO userCodeDTO);
 }

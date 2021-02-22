@@ -1,6 +1,7 @@
 package devanmejia.configuration.security.jwt;
 
 import devanmejia.models.enums.UserRole;
+import devanmejia.models.enums.UserState;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,12 +36,13 @@ public class JWTProvider {
         return new BCryptPasswordEncoder();
     }
 
+
     public String createToken(String userName, UserRole userRole){
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put("role", userRole.name());
 
         Date currentDate = new Date();
-        Date validationTime = new Date(currentDate.getTime()+timeValidation);
+        Date validationTime = new Date(currentDate.getTime() + timeValidation);
 
         return Jwts.builder()
                 .setClaims(claims)

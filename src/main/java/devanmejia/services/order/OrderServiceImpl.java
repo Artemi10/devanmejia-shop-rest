@@ -63,21 +63,21 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public void updateOrderByCartProducts(int orderId, CartProductDTO[] cartProductsDTO){
+    public Order updateOrderByCartProducts(int orderId, CartProductDTO[] cartProductsDTO){
         Order order = getOrderById(orderId);
         for(CartProductDTO cartProductDTO: cartProductsDTO){
             Product product = productService.getProductByProductName(cartProductDTO.getProductName());
             setProductInOrder(product, cartProductDTO.getAmount(), order);
         }
         order.setOrderStatus(OrderStatus.ORDERED);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
     @Override
-    public void updateOrderByOrderStatus(int orderId, OrderStatus orderStatus) {
+    public Order updateOrderByOrderStatus(int orderId, OrderStatus orderStatus) {
         Order order = getOrderById(orderId);
         order.setOrderStatus(orderStatus);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
     @Override

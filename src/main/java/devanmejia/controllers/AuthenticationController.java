@@ -1,8 +1,12 @@
 package devanmejia.controllers;
 
+import devanmejia.configuration.security.jwt.JWTProvider;
 import devanmejia.models.Tokens;
 import devanmejia.models.entities.User;
+import devanmejia.models.enums.UserRole;
+import devanmejia.services.messageSender.EmailMessageSender;
 import devanmejia.services.tokens.TokensService;
+import devanmejia.transfer.UserCodeDTO;
 import devanmejia.transfer.UserLogInForm;
 import devanmejia.services.user.UserService;
 import devanmejia.transfer.UserSignUpForm;
@@ -17,22 +21,27 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     @Autowired
+    private JWTProvider jwtProvider;
+    @Autowired
     private UserService userService;
     @Autowired
     private TokensService tokensService;
+    @Autowired
+    private EmailMessageSender<User> authEmailMessageSender;
 
     @PostMapping("/logIn")
-    public ResponseEntity<Object> logInUser(@RequestBody UserLogInForm logInBody){
+    public ResponseEntity<String> logInUser(@RequestBody UserLogInForm logInBody){
         try {
             User user = userService.logInUser(logInBody);
-            Tokens tokens = tokensService.generateNewUserTokens(user);
-            return new ResponseEntity<>(tokens, HttpStatus.OK);
+            authEmailMessageSender.sendMessage(user);
+            String token = jwtProvider.createToken(user.getLogin(), UserRole.ROLE_UNAUTHUSER);
+            return new ResponseEntity<>(token, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("Your login and password are incorrect", HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @PostMapping("/logIn/userAdmin" )
+    @PostMapping("/logIn/userAdmin")
     public ResponseEntity<Object> logInAdmin(@RequestBody UserLogInForm userLoginForm)  {
         try {
             User admin = userService.logInAdmin(userLoginForm);
