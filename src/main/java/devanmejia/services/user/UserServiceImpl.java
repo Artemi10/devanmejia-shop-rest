@@ -3,11 +3,9 @@ package devanmejia.services.user;
 import devanmejia.models.entities.User;
 import devanmejia.models.enums.UserRole;
 import devanmejia.models.enums.UserState;
-import devanmejia.transfer.UserCodeDTO;
 import devanmejia.transfer.UserLogInForm;
 import devanmejia.transfer.UserSignUpForm;
 import devanmejia.repositories.UserRepository;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,21 +27,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signUpUser(UserSignUpForm userForm){
-        try{
-            User user = getUserByLogin(userForm.getLogin());
-            throw new IllegalArgumentException();
-        }catch (IllegalArgumentException e){
+        Optional<User> userCandidate = userRepository.findById(userForm.getLogin());
+        if (userCandidate.isEmpty()){
             User user = generateNewActiveUser(userForm);
-            userRepository.save(user);
+            updateUser(user);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userForm.getLogin(), userForm.getPassword()));
             return user;
+        }
+        else{
+            throw new IllegalArgumentException(String.format("User %s has already been registered", userForm.getLogin()));
         }
     }
 
     private User generateNewActiveUser(UserSignUpForm userForm){
-        return new User(userForm.getLogin(), userForm.getFirstName(), userForm.getLastName(),
-                passwordEncoder.encode(userForm.getPassword()), userForm.getEmail(),
-                new ArrayList<>(), UserState.ACTIVE, UserRole.ROLE_CLIENT, null, null);
+        return User.builder()
+                .login(userForm.getLogin())
+                .firstName(userForm.getFirstName())
+                .lastName(userForm.getLastName())
+                .password(passwordEncoder.encode(userForm.getPassword()))
+                .email(userForm.getEmail())
+                .orders(new ArrayList<>())
+                .userRole(UserRole.ROLE_CLIENT)
+                .state(UserState.ACTIVE).build();
     }
 
     @Override
@@ -63,36 +68,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateUserPassword(String login, String password) {
+        User user = getUserByLogin(login);
+        user.setPassword(passwordEncoder.encode(password));
+        updateUser(user);
+        return user;
+    }
+    @Override
     public User getUserByLogin(String login) {
         Optional<User> userCandidate = userRepository.findById(login);
-        if(userCandidate.isPresent()){
-            return userCandidate.get();
-        }
-        else {
-            throw new IllegalArgumentException("User with name " + login + " was not found");
-        }
+        return userCandidate
+                .orElseThrow(() -> new IllegalArgumentException(String.format("User with name %s was not found", login)));
     }
     @Override
-    public String generateNewLogInCode(User user){
-        String code = RandomStringUtils.randomAlphanumeric(6);
-        user.setCode(passwordEncoder.encode(code));
-        user.setUserRole(UserRole.ROLE_UNAUTHUSER);
+    public void updateUser(User user) {
         userRepository.save(user);
-        return code;
-    }
-
-    @Override
-    public User checkUserCode(UserCodeDTO userCodeDTO) {
-        Optional<User> userCandidate = userRepository.findById(userCodeDTO.getLogin());
-        User user = userCandidate
-                .orElseThrow(() -> new IllegalArgumentException("Login is incorrect"));
-        if (passwordEncoder.matches(userCodeDTO.getCode(), user.getCode())){
-            user.setUserRole(UserRole.ROLE_CLIENT);
-            userRepository.save(user);
-            return user;
-        }
-        else{
-            throw new IllegalArgumentException("Code is incorrect");
-        }
     }
 }

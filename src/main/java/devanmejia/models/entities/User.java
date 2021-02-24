@@ -43,6 +43,7 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
     private String refreshToken;
-    private String code;
+    private String logInCode;
+    private String resetCode;
 }
 

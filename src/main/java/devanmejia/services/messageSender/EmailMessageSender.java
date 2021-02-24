@@ -1,9 +1,9 @@
 package devanmejia.services.messageSender;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -23,6 +23,7 @@ public abstract class EmailMessageSender<T> {
         }
     }
 
+    @Async
     public abstract void sendMessage(T emailSubject) throws IOException, MessagingException;
 
     protected Message createBasicMessage(String addresseeEmail) throws MessagingException {

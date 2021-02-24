@@ -1,4 +1,4 @@
-package devanmejia.controllers;
+package devanmejia.controllers.auth;
 
 import devanmejia.configuration.security.jwt.JWTProvider;
 import devanmejia.models.Tokens;
@@ -6,11 +6,11 @@ import devanmejia.models.entities.User;
 import devanmejia.models.enums.UserRole;
 import devanmejia.services.messageSender.EmailMessageSender;
 import devanmejia.services.tokens.TokensService;
-import devanmejia.transfer.UserCodeDTO;
 import devanmejia.transfer.UserLogInForm;
 import devanmejia.services.user.UserService;
 import devanmejia.transfer.UserSignUpForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +27,18 @@ public class AuthenticationController {
     @Autowired
     private TokensService tokensService;
     @Autowired
+    @Qualifier("authEmailMessageSender")
     private EmailMessageSender<User> authEmailMessageSender;
+    @Autowired
+    @Qualifier("resetEmailMessageSender")
+    private EmailMessageSender<User> resetEmailMessageSender;
 
     @PostMapping("/logIn")
     public ResponseEntity<String> logInUser(@RequestBody UserLogInForm logInBody){
         try {
             User user = userService.logInUser(logInBody);
             authEmailMessageSender.sendMessage(user);
-            String token = jwtProvider.createToken(user.getLogin(), UserRole.ROLE_UNAUTHUSER);
+            String token = jwtProvider.createToken(user.getLogin(), UserRole.ROLE_UNAUTH_USER);
             return new ResponseEntity<>(token, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("Your login and password are incorrect", HttpStatus.UNAUTHORIZED);
@@ -59,7 +63,7 @@ public class AuthenticationController {
             Tokens tokens = tokensService.generateNewUserTokens(user);
             return new ResponseEntity<>(tokens, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(String.format("User %s has already been registered", signUpBody.getLogin()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -80,6 +84,18 @@ public class AuthenticationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/reset")
+    public ResponseEntity<String> sendResetCode(@RequestBody String login){
+        try {
+            User user = userService.getUserByLogin(login);
+            resetEmailMessageSender.sendMessage(user);
+            String token = jwtProvider.createToken(user.getLogin(), UserRole.ROLE_PASSWORD_RESET);
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 }
