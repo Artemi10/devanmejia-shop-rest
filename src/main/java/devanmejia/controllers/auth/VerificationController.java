@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/verify/")
 public class VerificationController {
     @Autowired
+    @Qualifier("authEmailMessageSender")
     private EmailMessageSender<User> emailMessageSender;
     @Autowired
     private UserService userService;

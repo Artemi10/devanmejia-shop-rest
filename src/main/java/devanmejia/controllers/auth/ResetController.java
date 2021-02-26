@@ -2,6 +2,7 @@ package devanmejia.controllers.auth;
 
 import devanmejia.configuration.security.jwt.JWTProvider;
 import devanmejia.models.entities.User;
+import devanmejia.services.messageSender.EmailMessageSender;
 import devanmejia.services.secretCode.SecretCodeService;
 import devanmejia.services.user.UserService;
 import devanmejia.transfer.UserCodeDTO;
@@ -11,11 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/reset")
 public class ResetController {
+    @Autowired
+    @Qualifier("resetEmailMessageSender")
+    private EmailMessageSender<User> emailMessageSender;
     @Autowired
     private JWTProvider jwtProvider;
     @Autowired
@@ -38,9 +45,9 @@ public class ResetController {
     public ResponseEntity<Object> updateResetCode(@RequestBody String login){
         try {
             User user = userService.getUserByLogin(login);
-            resetCodeService.generateNewCode(user);
+            emailMessageSender.sendMessage(user);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        }catch (IllegalArgumentException | IOException | MessagingException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
