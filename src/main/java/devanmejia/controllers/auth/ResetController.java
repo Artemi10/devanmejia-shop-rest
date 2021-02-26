@@ -3,6 +3,7 @@ package devanmejia.controllers.auth;
 import devanmejia.configuration.security.jwt.JWTProvider;
 import devanmejia.models.entities.User;
 import devanmejia.services.secretCode.SecretCodeService;
+import devanmejia.services.user.UserService;
 import devanmejia.transfer.UserCodeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +19,8 @@ public class ResetController {
     @Autowired
     private JWTProvider jwtProvider;
     @Autowired
+    private UserService userService;
+    @Autowired
     @Qualifier("resetCodeService")
     private SecretCodeService resetCodeService;
 
@@ -27,6 +30,16 @@ public class ResetController {
             User user = resetCodeService.checkUserCode(userCodeDTO);
             String token = jwtProvider.createToken(user.getLogin(), user.getUserRole());
             return new ResponseEntity<>(token, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @PatchMapping("/code")
+    public ResponseEntity<Object> updateResetCode(@RequestBody String login){
+        try {
+            User user = userService.getUserByLogin(login);
+            resetCodeService.generateNewCode(user);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
