@@ -1,33 +1,35 @@
 package devanmejia.services.messageSender;
 
 import devanmejia.models.entities.Order;
-import devanmejia.models.enums.EmailMessage;
-import devanmejia.models.enums.OrderStatus;
+import devanmejia.transfer.order.EmailOrderDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Transport;
-import java.io.IOException;
 @Service
-public class OrderEmailMessageSender extends EmailMessageSender<Order>{
+public class OrderEmailMessageSender {
+    @Autowired
+    @Qualifier("apiRestTemplate")
+    private RestTemplate restTemplate;
+    @Value("${email.sender.api.url}")
+    private String emailSenderAPI;
 
-
-    @Override
-    public void sendMessage(Order emailSubject) throws IOException, MessagingException {
-        Message message = createOrderMessage(emailSubject);
-        Transport.send(message);
-    }
-
-    private Message createOrderMessage(Order order) throws MessagingException, IOException {
-        Message message = createBasicMessage(order.getUser().getEmail());
-        message.setSubject("Order №" + order.getId());
-        if (order.getOrderStatus().equals(OrderStatus.ORDERED)){
-            message.setText(EmailMessage.SuccessfulMessage.toString());
+    @Async
+    public void sendMessage(Order order){
+        EmailOrderDTO emailOrder = EmailOrderDTO.builder()
+                .id(order.getId())
+                .email(order.getShopUser().getEmail())
+                .orderStatus(order.getOrderStatus().name()).build();
+        try{
+            restTemplate.postForEntity(emailSenderAPI + "/order", emailOrder, Object.class);
         }
-        if (order.getOrderStatus().equals(OrderStatus.READY)){
-            message.setText(EmailMessage.ReadyMessage.toString());
+        catch (Exception e){
+            throw new IllegalArgumentException(
+                    String.format("Can not send email to %s. " + e.getMessage(), emailOrder.getEmail()));
         }
-        return message;
+
     }
 }

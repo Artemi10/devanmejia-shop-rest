@@ -4,8 +4,10 @@ import devanmejia.models.entities.Product;
 import devanmejia.models.entities.StockProduct;
 import devanmejia.repositories.StockProductRepository;
 import devanmejia.services.product.ProductService;
+import devanmejia.services.storage.ImageStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,28 +23,31 @@ public class StockProductServiceImpl implements StockProductService {
 
     @Override
     public StockProduct createNewStockProduct(Product product){
-        StockProduct stockProduct = new StockProduct(product.getName(), product, 0);
+        StockProduct stockProduct = StockProduct.builder()
+                .product(product)
+                .amount(0).build();
         stockProductRepository.save(stockProduct);
         return stockProduct;
     }
 
     @Override
-    public List<StockProduct> getAllStockProducts(){
-        return stockProductRepository.findAll();
+    public List<StockProduct> getAllStockProductsOrderByName(){
+        return stockProductRepository.findAllByOrderByProductName();
     }
 
     @Override
     public StockProduct getStockProductByProductName(String productName) {
-        Optional<StockProduct> stockProductCandidate = stockProductRepository.findById(productName);
+        Optional<StockProduct> stockProductCandidate = stockProductRepository.getByProductName(productName);
         if(stockProductCandidate.isPresent()) {
             return stockProductCandidate.get();
         }
-        throw new IllegalArgumentException("There is not product with name "+ productName+" in database.");
+        throw new IllegalArgumentException("There is not product with name " + productName + " in database.");
     }
 
     @Override
+    @Transactional
     public void deleteStockProducts(String productName){
-        stockProductRepository.deleteById(productName);
+        stockProductRepository.deleteByProductName(productName);
         productService.deleteProductByName(productName);
     }
 
@@ -72,7 +77,9 @@ public class StockProductServiceImpl implements StockProductService {
             stockProductRepository.save(stockProduct);
         }catch (IllegalArgumentException e){
             Product product = productService.getProductByProductName(productName);
-            stockProduct = new StockProduct(productName, product, amount);
+            stockProduct = StockProduct.builder()
+                    .product(product)
+                    .amount(amount).build();
             stockProductRepository.save(stockProduct);
         }
     }

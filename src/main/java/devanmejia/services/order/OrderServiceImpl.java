@@ -3,14 +3,14 @@ package devanmejia.services.order;
 import devanmejia.models.entities.CartProduct;
 import devanmejia.models.entities.Order;
 import devanmejia.models.entities.Product;
-import devanmejia.models.entities.User;
+import devanmejia.models.entities.ShopUser;
 import devanmejia.models.enums.OrderStatus;
 import devanmejia.repositories.OrderRepository;
 import devanmejia.services.cartProduct.CartProductService;
 import devanmejia.services.product.ProductService;
 import devanmejia.services.stockProduct.StockProductService;
-import devanmejia.services.user.UserService;
-import devanmejia.transfer.CartProductDTO;
+import devanmejia.services.shopUser.ShopUserService;
+import devanmejia.transfer.product.CartProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private UserService userService;
+    private ShopUserService shopUserService;
     @Autowired
     private ProductService productService;
     @Autowired
@@ -33,8 +33,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<Order> findOrdersByUserName(String login){
-        User user = userService.getUserByLogin(login);
-        return orderRepository.findAllByUser(user);
+        ShopUser shopUser = shopUserService.getUserByLogin(login);
+        return orderRepository.findAllByShopUser(shopUser);
     }
     @Override
     public Order findActiveOrder(String login){
@@ -44,14 +44,14 @@ public class OrderServiceImpl implements OrderService{
                 return order;
             }
         }
-        return generateNewActiveOrder(userService.getUserByLogin(login));
+        return generateNewActiveOrder(shopUserService.getUserByLogin(login));
     }
 
-    private Order generateNewActiveOrder(User user){
+    private Order generateNewActiveOrder(ShopUser shopUser){
         Order order = Order.builder()
                 .orderStatus(OrderStatus.ACTIVE)
                 .cartProducts(new ArrayList<>())
-                .user(user)
+                .shopUser(shopUser)
                 .build();
         orderRepository.save(order);
         return order;
@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order updateOrderByCartProducts(int orderId, CartProductDTO[] cartProductsDTO){
+    public Order updateOrderByCartProducts(Long orderId, CartProductDTO[] cartProductsDTO){
         Order order = getOrderById(orderId);
         for(CartProductDTO cartProductDTO: cartProductsDTO){
             Product product = productService.getProductByProductName(cartProductDTO.getProductName());
@@ -74,14 +74,14 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order updateOrderByOrderStatus(int orderId, OrderStatus orderStatus) {
+    public Order updateOrderByOrderStatus(Long orderId, OrderStatus orderStatus) {
         Order order = getOrderById(orderId);
         order.setOrderStatus(orderStatus);
         return orderRepository.save(order);
     }
 
     @Override
-    public Order getOrderById(int orderId){
+    public Order getOrderById(Long orderId){
         Optional<Order> orderCandidate = orderRepository.findById(orderId);
         if(orderCandidate.isPresent()){
             return orderCandidate.get();

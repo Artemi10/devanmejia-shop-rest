@@ -3,11 +3,10 @@ package devanmejia.services.cartProduct;
 import devanmejia.models.entities.CartProduct;
 import devanmejia.models.entities.Order;
 import devanmejia.models.entities.Product;
-import devanmejia.transfer.CartProductForm;
+import devanmejia.transfer.product.CartProductForm;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public interface CartProductService {

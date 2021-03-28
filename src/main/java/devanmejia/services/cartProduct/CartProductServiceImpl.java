@@ -4,7 +4,7 @@ package devanmejia.services.cartProduct;
 import devanmejia.models.entities.CartProduct;
 import devanmejia.models.entities.Order;
 import devanmejia.models.entities.Product;
-import devanmejia.transfer.CartProductForm;
+import devanmejia.transfer.product.CartProductForm;
 import devanmejia.repositories.CartProductRepository;
 import devanmejia.services.order.OrderService;
 import devanmejia.services.product.ProductService;

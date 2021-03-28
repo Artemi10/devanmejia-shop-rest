@@ -7,17 +7,19 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name="stock")
+@Table(name = "stock")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StockProduct {
     @Id
-    @Column(name = "product_name")
-    private String productName;
-    @OneToOne(fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn(name = "product_name", referencedColumnName = "product_name")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
     @Column(name = "amount")
     private int amount;
+
 }
 

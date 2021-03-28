@@ -1,37 +1,38 @@
 package devanmejia.services.product;
 
-import devanmejia.models.entities.Picture;
 import devanmejia.models.entities.Product;
 import devanmejia.models.enums.ProductType;
 import devanmejia.repositories.ProductRepository;
-import devanmejia.transfer.AddProductDTO;
+import devanmejia.services.storage.ImageStorage;
+import devanmejia.transfer.product.AddProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 @Component
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ImageStorage imageStorage;
 
     @Override
     public Product createNewProduct(AddProductDTO addProductDTO) {
-        String imageString = addProductDTO.getProductImage().split(",")[1];
-        String productURL = addProductDTO.getProductName()+".jpg";
         Product product = Product.builder()
                 .description(addProductDTO.getProductDescription())
                 .name(addProductDTO.getProductName())
                 .productType(ProductType.valueOf(addProductDTO.getProductType().toUpperCase()))
                 .price(addProductDTO.getProductPrice())
-                .picture(new Picture(addProductDTO.getProductName()+"_picture", productURL, imageString))
                 .build();
-        productRepository.save(product);
-        return product;
+        imageStorage.uploadProductImage(addProductDTO.getProductName(), addProductDTO.getProductImage());
+        return productRepository.save(product);
     }
 
     @Override
     public Product getProductByProductName(String productName) {
-        Optional<Product> productOptional = productRepository.findById(productName);
+        Optional<Product> productOptional = productRepository.getProductByName(productName);
         if (productOptional.isPresent()){
             return productOptional.get();
         }
@@ -42,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProductByName(String productName) {
-        productRepository.deleteById(productName);
+        productRepository.deleteProductByName(productName);
     }
 
     @Override
@@ -50,5 +51,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductByProductName(productName);
         product.setPrice(price);
         productRepository.save(product);
+    }
+
+    @Override
+    public void downloadProductImage(Product product) {
+        String link = imageStorage.downloadProductImage(product.getName());
+        product.setImageLink(link);
     }
 }

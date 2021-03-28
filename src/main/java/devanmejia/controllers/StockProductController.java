@@ -4,9 +4,11 @@ import devanmejia.models.entities.Product;
 import devanmejia.models.entities.StockProduct;
 import devanmejia.services.product.ProductService;
 import devanmejia.services.stockProduct.StockProductService;
-import devanmejia.transfer.AddProductDTO;
-import devanmejia.transfer.AdminStockProductDTO;
-import devanmejia.transfer.StockProductDTO;
+import devanmejia.services.storage.ImageStorage;
+import devanmejia.transfer.product.AddProductDTO;
+import devanmejia.transfer.product.AdminStockProductDTO;
+import devanmejia.transfer.image.DownloadedImage;
+import devanmejia.transfer.product.StockProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,34 +16,33 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-
-@RequestMapping("/api/**")
+@RequestMapping("/api/shop")
 @RestController
-@CrossOrigin
 public class StockProductController {
     @Autowired
     private StockProductService stockProductService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ImageStorage imageStorage;
 
     @GetMapping("/stockProducts")
     public ResponseEntity<Object> showStockProducts(){
         try {
-            List<StockProduct> stockProducts = stockProductService.getAllStockProducts();
-            return new ResponseEntity<>(StockProductDTO.form(stockProducts), HttpStatus.OK);
+            List<StockProduct> stockProducts = stockProductService.getAllStockProductsOrderByName();
+            DownloadedImage[] downloadedImages = imageStorage.downloadAllProductImage();
+            return new ResponseEntity<>(StockProductDTO.form(stockProducts, downloadedImages), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/admin/stockProducts")
+    @GetMapping("/admin/stockProduct")
     public ResponseEntity<Object> getStockProducts(){
         try {
-            List<StockProduct> stockProducts = stockProductService.getAllStockProducts();
+            List<StockProduct> stockProducts = stockProductService.getAllStockProductsOrderByName();
             return new ResponseEntity<>(AdminStockProductDTO.form(stockProducts), HttpStatus.OK);
         }catch (Exception e){
-            System.out.println(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -49,10 +50,11 @@ public class StockProductController {
     @DeleteMapping("/admin/stockProduct/{productName}")
     public ResponseEntity<Object> deleteStockProducts(@PathVariable String productName) {
         try {
+            imageStorage.deleteProductImage(productName);
             stockProductService.deleteStockProducts(productName);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch(Exception e){
-            return new ResponseEntity<>( "This product has already been removed", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
